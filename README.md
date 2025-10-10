@@ -132,7 +132,6 @@ This simulator demonstrates:
 - **Memory Management Concepts**: Partition allocation, fragmentation
 - **Algorithm Comparison**: Performance differences between strategies
 - **System Performance**: Throughput, wait times, utilization metrics
-- **Interactive Learning**: Visual representation of complex concepts
 
 ## Development
 

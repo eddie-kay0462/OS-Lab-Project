@@ -133,10 +133,10 @@ class OSSimulation:
         return {
             "strategy": self.strategy,
             "throughput": throughput,
-            "avg_wait_time": avg_wait,
-            "utilization %": utilization,
-            "avg_internal_frag": avg_frag,
-            "too_big_jobs": len(too_big_jobs),
+            "avgWaitTime": avg_wait,
+            "utilization": utilization,
+            "avgInternalFrag": avg_frag,
+            "tooBigJobs": len(too_big_jobs),
             "details": stats_details
         }
     
@@ -146,21 +146,21 @@ class OSSimulation:
         
         # Throughput calculation
         too_big_count = len([j for j in self.jobs if j.status == "too big"])
-        details["throughput_calc"] = f"Throughput = {len(self.finished_jobs)} jobs completed (out of {len(self.jobs)} total jobs)"
+        details["throughputCalc"] = f"Throughput = {len(self.finished_jobs)} jobs completed (out of {len(self.jobs)} total jobs)"
         if too_big_count > 0:
-            details["throughput_calc"] += f"\n   Note: {too_big_count} jobs were too big for any partition"
+            details["throughputCalc"] += f"\n   Note: {too_big_count} jobs were too big for any partition"
         
         # Wait time calculation
         if self.finished_jobs:
             wait_times = [j.wait_time for j in self.finished_jobs]
-            details["wait_time_calc"] = f"Avg Wait Time = {statistics.mean(wait_times):.2f} ticks (from jobs: {wait_times})"
+            details["waitTimeCalc"] = f"Avg Wait Time = {statistics.mean(wait_times):.2f} ticks (from jobs: {wait_times})"
         else:
-            details["wait_time_calc"] = "Avg Wait Time = 0 (no completed jobs)"
+            details["waitTimeCalc"] = "Avg Wait Time = 0 (no completed jobs)"
         
         # Utilization calculation
         used_partitions = sum(1 for p in self.partitions if p.use_count > 0)
         total_partitions = len(self.partitions)
-        details["utilization_calc"] = f"Utilization = {used_partitions}/{total_partitions} partitions used = {(used_partitions/total_partitions)*100:.1f}%"
+        details["utilizationCalc"] = f"Utilization = {used_partitions}/{total_partitions} partitions used = {(used_partitions/total_partitions)*100:.1f}%"
         
         # Fragmentation calculation
         frag_values = []
@@ -172,15 +172,15 @@ class OSSimulation:
                 frag_details.append(f"Job {job.id}: {job.assigned_partition.size} - {job.size} = {frag}")
         
         if frag_values:
-            details["fragmentation_calc"] = f"Avg Fragmentation = {statistics.mean(frag_values):.2f} KB"
-            details["fragmentation_details"] = frag_details
+            details["fragmentationCalc"] = f"Avg Fragmentation = {statistics.mean(frag_values):.2f} KB"
+            details["fragmentationDetails"] = frag_details
         else:
-            details["fragmentation_calc"] = "Avg Fragmentation = 0 (no completed jobs)"
+            details["fragmentationCalc"] = "Avg Fragmentation = 0 (no completed jobs)"
         
         # Partition usage analysis
         partition_usage = []
         for p in self.partitions:
             partition_usage.append(f"Partition {p.id} (size={p.size}): used {p.use_count} times")
-        details["partition_usage"] = partition_usage
+        details["partitionUsage"] = partition_usage
         
         return details
